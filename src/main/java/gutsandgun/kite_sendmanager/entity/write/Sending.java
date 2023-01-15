@@ -51,9 +51,6 @@ public class Sending extends BaseTimeEntity {
 
     @Comment("예약시각")
     private Long scheduleTime;
-    private String title;
-    private String media_link;
-    private String content;
 
     @Comment("제목")
     private String title;
