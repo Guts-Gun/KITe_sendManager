@@ -1,9 +1,7 @@
 package gutsandgun.kite_sendmanager.entity.write;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
@@ -11,6 +9,8 @@ import org.hibernate.annotations.Where;
 
 @Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Where(clause = "is_deleted = false")
@@ -24,7 +24,7 @@ public class SendingRule {
     @Column(name = "id")
     private Long id;
     @Column(name = "fk_user_id")
-    private Long userId;
+    private String userId;
 
     @Column(name = "fk_sending_id")
     private Long sendingId;

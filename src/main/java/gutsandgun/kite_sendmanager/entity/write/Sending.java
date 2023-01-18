@@ -5,9 +5,7 @@ import gutsandgun.kite_sendmanager.entity.BaseTimeEntity;
 import gutsandgun.kite_sendmanager.entity.SendingRuleType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -17,6 +15,8 @@ import java.time.LocalDateTime;
 
 @Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Where(clause = "is_deleted = false")
@@ -31,7 +31,7 @@ public class Sending extends BaseTimeEntity {
     private Long id;
 
     @Column(name = "fk_user_id")
-    private Long userId;
+    private String userId;
 
     @Comment("분배규칙타입")
     @Enumerated(EnumType.STRING)
@@ -66,10 +66,10 @@ public class Sending extends BaseTimeEntity {
 
     @Comment("생성자")
     @Column(name = "reg_id", nullable = false, length = 20)
-    private Long regId;
+    private String regId;
 
     @Comment("수정자")
     @Column(name = "mod_id", length = 20)
-    private Long ModId;
+    private String ModId;
 
 }

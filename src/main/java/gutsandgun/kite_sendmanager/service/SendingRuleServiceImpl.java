@@ -22,7 +22,7 @@ public class SendingRuleServiceImpl implements SendingRuleService{
     @Autowired
     private final ModelMapper mapper;
 
-    public void insertSendingRule(List<SendingRuleDTO> brokerList, Integer userId, Long sendingId){
+    public void insertSendingRule(List<SendingRuleDTO> brokerList, String userId, Long sendingId){
 
         brokerList.forEach(sendingRuleDTO -> {
             writeSendingRuleRepository.save(dtoToEntity(sendingRuleDTO, userId, sendingId));

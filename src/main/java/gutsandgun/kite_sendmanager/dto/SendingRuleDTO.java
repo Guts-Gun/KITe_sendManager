@@ -11,9 +11,16 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SendingRuleDTO {
 
-    private Long userId;
+    private String userId;
+
     private Long sendingId;
+
     private Long brokerId;
+
     private Long weight;
+
+    private String regId;
+
+    private String modId;
 
 }

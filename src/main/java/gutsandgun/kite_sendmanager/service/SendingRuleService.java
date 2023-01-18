@@ -10,15 +10,15 @@ import java.util.List;
 
 public interface SendingRuleService {
 
-    void insertSendingRule(List<SendingRuleDTO> sendingRuleDTO, Integer userId, Long sendingId);    // 분배규칙리스트 저장
+    void insertSendingRule(List<SendingRuleDTO> sendingRuleDTO, String userId, Long sendingId);    // 분배규칙리스트 저장
 
 
-    default SendingRule dtoToEntity(SendingRuleDTO dto, Integer userId, Long sendingId) {
+    default SendingRule dtoToEntity(SendingRuleDTO dto, String userId, Long sendingId) {
         SendingRule sendingRule = SendingRule.builder()
                 .sendingId(sendingId)
                 .brokerId(dto.getBrokerId())
                 .weight(dto.getWeight())
-                .userId(userId.longValue())
+                .userId(userId)
                 .build();
         return sendingRule;
     }
