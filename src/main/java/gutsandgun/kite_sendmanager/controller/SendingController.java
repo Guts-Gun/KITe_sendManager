@@ -46,4 +46,25 @@ public class SendingController {
         }
         return new ResponseEntity<>(sendingId, HttpStatus.OK);
     }
+
+    /**
+     * 발송 시작
+     *
+     * @author solbiko
+     * @param sendingId - 발송 번호
+     * @return long sendingId
+     */
+    @PostMapping("/start")
+    public ResponseEntity<Long> startSending(@RequestBody Long sendingId) {
+
+        log.info(" [send manager] sending start  ::: sendingId :" + sendingId);
+        log.info("-------------------------------------------------");
+
+        sendingService.startSending(sendingId);
+
+        return new ResponseEntity<>(sendingId, HttpStatus.OK);
+    }
+
+
+
 }

@@ -10,4 +10,5 @@ public interface SendingService {
 
     Long insertSending(SendingDTO sendingDTO, String userId);    // 발송 저장
 
+    void startSending(Long sendingId);   // 발송 시작
 }
