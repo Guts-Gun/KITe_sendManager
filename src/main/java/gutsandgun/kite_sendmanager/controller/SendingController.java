@@ -41,7 +41,7 @@ public class SendingController {
         Long sendingId = sendingService.insertSending(sendingDTO, userId);
 
         // 중계사 비율 CUSTOM
-        if (sendingDTO.getRuleType().equals(SendingRuleType.CUSTOM)) {
+        if (sendingDTO.getSendingRuleType().equals(SendingRuleType.CUSTOM)) {
             sendingRuleService.insertSendingRule(sendMsgRequestDTO.getBrokerList(), userId, sendingId);
         }
         return new ResponseEntity<>(sendingId, HttpStatus.OK);

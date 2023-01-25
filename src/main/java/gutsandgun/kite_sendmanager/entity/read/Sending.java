@@ -33,12 +33,14 @@ public class Sending {
      * 분배 규칙 타입
      */
     @Comment("분배 규칙 타입")
+    @Enumerated(EnumType.STRING)
     private SendingRuleType SendingRuleType;
 
     /**
      * 발송 메시지 타입
      */
     @Comment("발송 메시지 타입")
+    @Enumerated(EnumType.STRING)
     private SendingType sendingType;
 
     @Comment("대체발송 여부")

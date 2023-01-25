@@ -33,6 +33,7 @@ public class Sending extends BaseTimeEntity {
     private SendingRuleType sendingRuleType;
 
     @Comment("발송타입")
+    @Enumerated(EnumType.STRING)
     private SendingType sendingType;
 
     @Comment("대체발송 여부")
