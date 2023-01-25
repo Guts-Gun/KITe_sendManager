@@ -1,17 +1,12 @@
 package gutsandgun.kite_sendmanager.entity.write;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import gutsandgun.kite_sendmanager.entity.BaseTimeEntity;
-import gutsandgun.kite_sendmanager.entity.SendingRuleType;
+import gutsandgun.kite_sendmanager.type.SendingRuleType;
+import gutsandgun.kite_sendmanager.type.SendingType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Builder
 @Entity
@@ -38,7 +33,7 @@ public class Sending extends BaseTimeEntity {
     private SendingRuleType ruleType;
 
     @Comment("발송타입")
-    private String sendingType;
+    private SendingType sendingType;
 
     @Comment("대체발송 여부")
     private String replaceYn;
@@ -47,7 +42,7 @@ public class Sending extends BaseTimeEntity {
     private Long totalSending;
 
     @Comment("입력시각")
-    private Long requestTime;
+    private Long inputTime;
 
     @Comment("예약시각")
     private Long scheduleTime;

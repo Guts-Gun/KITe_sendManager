@@ -27,7 +27,7 @@ public class SendingServiceImpl implements SendingService{
     public Long insertSending(SendingDTO sendingDTO, String userId) {
 
         sendingDTO.setScheduleTime(sendingDTO.getReservationTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        sendingDTO.setRequestTime(new Date().getTime());
+        sendingDTO.setInputTime(new Date().getTime());
         Sending sending = writeSendingRepository.save(mapper.map(sendingDTO, Sending.class));
         return sending.getId();
     }

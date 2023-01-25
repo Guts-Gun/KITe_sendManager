@@ -2,9 +2,9 @@ package gutsandgun.kite_sendmanager.controller;
 
 import gutsandgun.kite_sendmanager.dto.SendMsgRequestDTO;
 import gutsandgun.kite_sendmanager.dto.SendingDTO;
-import gutsandgun.kite_sendmanager.entity.SendingRuleType;
 import gutsandgun.kite_sendmanager.service.SendingRuleService;
 import gutsandgun.kite_sendmanager.service.SendingService;
+import gutsandgun.kite_sendmanager.type.SendingRuleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
