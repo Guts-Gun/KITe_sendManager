@@ -19,7 +19,7 @@ public class SendingDTO {
 
     private String userId;
 
-    private SendingRuleType ruleType;       // 중계사 규칙 타입
+    private SendingRuleType sendingRuleType; // 중계사 규칙 타입
 
     private SendingRuleType sendingType;    // 발송 타입
 
