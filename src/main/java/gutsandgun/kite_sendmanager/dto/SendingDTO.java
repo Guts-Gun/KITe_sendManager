@@ -2,6 +2,7 @@ package gutsandgun.kite_sendmanager.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import gutsandgun.kite_sendmanager.type.SendingRuleType;
+import gutsandgun.kite_sendmanager.type.SendingType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class SendingDTO {
 
     private SendingRuleType sendingRuleType; // 중계사 규칙 타입
 
-    private SendingRuleType sendingType;    // 발송 타입
+    private SendingType sendingType;        // 발송 타입
 
     private String replaceYn;               // 대체발송 여부
 
