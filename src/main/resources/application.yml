@@ -1,6 +1,21 @@
 server:
   port: 8004
 spring:
+  rabbitmq:
+    host: gutsandgun.kro.kr
+    port: 11005
+    username: gutsandgun
+    password: gutsandgun
+    virtual-host: /
+    ssl:
+      enabled: true
+      algorithm: TLSv1.2
+#    host: localhost
+#    port: 5672
+#    username: solbitest
+#    password: solbitest1212!
+
+
   writedb:
     driver-class-name: com.mysql.cj.jdbc.Driver
     jdbc-url: jdbc:mysql://gutsandgun.kro.kr:3306/sending?usessl=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -53,3 +68,21 @@ keycloak:
   auth-server-url: https://gutsandgun.kro.kr:10006
   credentials:
     secret: 0U1wVFCEHbzhhyPzWvDkQUnVfZFht7VE
+
+
+rabbitmq:
+  queue1:
+    name: SKT
+    exchange: SKT-exchange
+  queue2:
+    name: KT
+    exchange: KT-exchange
+  queue3:
+    name: LG
+    exchange: LG-exchange
+  routing:
+    key:
+      queue1: SKT
+      queue2: KT
+      queue3: LG
+
