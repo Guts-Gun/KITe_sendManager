@@ -6,15 +6,6 @@ spring:
     port: 11005
     username: gutsandgun
     password: gutsandgun
-    virtual-host: /
-    ssl:
-      enabled: true
-      algorithm: TLSv1.2
-#    host: localhost
-#    port: 5672
-#    username: solbitest
-#    password: solbitest1212!
-
 
   writedb:
     driver-class-name: com.mysql.cj.jdbc.Driver

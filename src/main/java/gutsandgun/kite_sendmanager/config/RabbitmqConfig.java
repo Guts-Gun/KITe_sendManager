@@ -64,15 +64,15 @@ public class RabbitmqConfig {
 
     @Bean
     Queue queue1() {
-        return new Queue(queue1, false);
+        return new Queue(queue1, true);
     }
     @Bean
     Queue queue2() {
-        return new Queue(queue2, false);
+        return new Queue(queue2, true);
     }
     @Bean
     Queue queue3() {
-        return new Queue(queue3, false);
+        return new Queue(queue3, true);
     }
 
 
