@@ -57,6 +57,9 @@ public class Sending extends BaseTimeEntity {
     @Comment("문자 내용")
     private String content;
 
+    @Comment("발신자")
+    private String sender;
+
     @ColumnDefault("false")
     private Boolean isDeleted = false;
 
