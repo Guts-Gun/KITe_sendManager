@@ -2,14 +2,14 @@ package gutsandgun.kite_sendmanager.entity.write;
 
 import gutsandgun.kite_sendmanager.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Where(clause = "is_deleted = false")
@@ -30,7 +30,6 @@ public class SendingBlock extends BaseTimeEntity {
     private Long blockTime;
 
     private Boolean isDeleted = false;
-
 
     @Comment("생성자")
     @Column(name = "reg_id", nullable = false, length = 20)
