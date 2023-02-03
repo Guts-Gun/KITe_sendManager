@@ -1,6 +1,5 @@
 package gutsandgun.kite_sendmanager.controller;
 
-import com.google.common.collect.Lists;
 import gutsandgun.kite_sendmanager.dto.SendMsgRequestDTO;
 import gutsandgun.kite_sendmanager.dto.SendingDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
@@ -17,8 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -73,11 +71,13 @@ public class SendingController {
 
         Long sendingId = map.get("sendingId");
 
-        log.info(" [send manager] sending start  ::: sendingId :" + sendingId);
-        log.info("-------------------------------------------------");
-
         // 발송
         SendingDTO sendingDTO = sendingService.startSending(sendingId);
+
+
+        log.info("Service: sendingManager, type: sendingStart, " +
+                "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", time: "+new Date().getTime());
+
 
         // 중계사 발송 분배 비율 리스트
         List<SendingRuleDTO> sendingRuleDTOList = null;
