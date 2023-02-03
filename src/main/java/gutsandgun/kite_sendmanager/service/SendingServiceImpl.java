@@ -47,7 +47,7 @@ public class SendingServiceImpl implements SendingService{
         if (reservDateTime != null){
             sendingDTO.setScheduleTime(reservDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         }
-        sendingDTO.setInputTime(new Date().getTime());
+
         Sending sending = writeSendingRepository.save(mapper.map(sendingDTO, Sending.class));
         Long sendingId = sending.getId();
         
