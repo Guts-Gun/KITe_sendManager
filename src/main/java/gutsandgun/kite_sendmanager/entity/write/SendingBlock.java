@@ -3,6 +3,7 @@ package gutsandgun.kite_sendmanager.entity.write;
 import gutsandgun.kite_sendmanager.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -29,6 +30,7 @@ public class SendingBlock extends BaseTimeEntity {
 
     private Long blockTime;
 
+    @ColumnDefault("false")
     private Boolean isDeleted = false;
 
     @Comment("생성자")
