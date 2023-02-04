@@ -1,5 +1,6 @@
 package gutsandgun.kite_sendmanager.entity.read;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import gutsandgun.kite_sendmanager.type.*;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -81,6 +84,9 @@ public class Sending {
     @Comment("메시지 내용")
     private String content;
 
+    @Comment("발신자")
+    private String sender;
+
     @ColumnDefault("false")
     private Boolean isDeleted = false;
 
@@ -91,4 +97,14 @@ public class Sending {
     @Comment("수정자")
     @Column(name = "mod_id", length = 20)
     private String ModId;
+
+    @Comment("생성일자")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Column(name = "reg_dt", nullable = false)
+    private LocalDateTime regDt;
+
+    @Comment("수정일자")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Column(name = "mod_dt")
+    private LocalDateTime modDt;
 }

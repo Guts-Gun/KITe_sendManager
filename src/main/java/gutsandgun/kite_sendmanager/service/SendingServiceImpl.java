@@ -2,8 +2,10 @@ package gutsandgun.kite_sendmanager.service;
 
 import gutsandgun.kite_sendmanager.dto.SendingDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
+import gutsandgun.kite_sendmanager.dto.SendingScheduleDto;
 import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
 import gutsandgun.kite_sendmanager.entity.write.Sending;
+import gutsandgun.kite_sendmanager.openfeign.SendingSchedulerServiceClient;
 import gutsandgun.kite_sendmanager.publisher.RabbitMQProducer;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingMsgRepository;
 import gutsandgun.kite_sendmanager.repository.write.WriteSendingRepository;
@@ -28,6 +30,11 @@ public class SendingServiceImpl implements SendingService{
     @Autowired
     ReadSendingMsgRepository readSendingMsgRepository;
 
+
+    @Autowired
+    private final SendingSchedulerServiceClient sendingSchedulerServiceClient;
+
+
     @Autowired
     private final ModelMapper mapper;
 
@@ -35,12 +42,22 @@ public class SendingServiceImpl implements SendingService{
     @Override
     public Long insertSending(SendingDTO sendingDTO, String userId) {
 
-        if (sendingDTO.getReservationTime() != null){
-            sendingDTO.setScheduleTime(sendingDTO.getReservationTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        LocalDateTime reservDateTime = sendingDTO.getReservationTime();
+
+        if (reservDateTime != null){
+            sendingDTO.setScheduleTime(reservDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         }
-        sendingDTO.setInputTime(new Date().getTime());
+
         Sending sending = writeSendingRepository.save(mapper.map(sendingDTO, Sending.class));
-        return sending.getId();
+        Long sendingId = sending.getId();
+        
+        if (reservDateTime != null) {
+            SendingScheduleDto sendingScheduleDto = new SendingScheduleDto();
+            sendingScheduleDto.setSendingId(sendingId);
+            sendingScheduleDto.setTime(sending.getScheduleTime());
+            sendingSchedulerServiceClient.addSchedule(sendingScheduleDto);
+        }
+        return sendingId;
     }
 
     @Override

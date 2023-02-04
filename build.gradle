@@ -41,7 +41,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
     testImplementation 'org.springframework.amqp:spring-rabbit-test'
 
-    implementation group: 'com.google.guava', name: 'guava', version: '11.0.2'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.0'
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
