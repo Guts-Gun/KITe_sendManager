@@ -76,4 +76,6 @@ rabbitmq:
       queue1: SKT
       queue2: KT
       queue3: LG
-
+feign:
+  url :
+    sending-scheduler : localhost:8003
