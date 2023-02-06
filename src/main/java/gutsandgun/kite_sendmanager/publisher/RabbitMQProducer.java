@@ -2,13 +2,14 @@ package gutsandgun.kite_sendmanager.publisher;
 
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
 import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import gutsandgun.kite_sendmanager.type.SendingType;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
 
 @Service
@@ -33,26 +34,21 @@ public class RabbitMQProducer {
     private String routingKey3;
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQProducer.class);
-
     private RabbitTemplate rabbitTemplate;
 
     public RabbitMQProducer(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendQueue1Message(SendingMsgDTO sendingMsgDTO){
-        LOGGER.info(String.format("Json message sent1 -> %s", sendingMsgDTO.toString()));
+    public void sendQueue1Message(SendingMsgDTO sendingMsgDTO, Long sendingId, SendingType sendingType){
         rabbitTemplate.convertAndSend(exchange1, routingKey1, sendingMsgDTO);
     }
 
-    public void sendQueue2Message(SendingMsgDTO sendingMsgDTO){
-        LOGGER.info(String.format("Json message sent2 -> %s", sendingMsgDTO.toString()));
+    public void sendQueue2Message(SendingMsgDTO sendingMsgDTO, Long sendingId, SendingType sendingType){
         rabbitTemplate.convertAndSend(exchange2, routingKey2, sendingMsgDTO);
     }
 
-    public void sendQueue3Message(SendingMsgDTO sendingMsgDTO){
-        LOGGER.info(String.format("Json message sent3 -> %s", sendingMsgDTO.toString()));
+    public void sendQueue3Message(SendingMsgDTO sendingMsgDTO, Long sendingId, SendingType sendingType){
         rabbitTemplate.convertAndSend(exchange3, routingKey3, sendingMsgDTO);
     }
 }

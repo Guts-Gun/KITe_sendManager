@@ -2,14 +2,30 @@ package gutsandgun.kite_sendmanager.service;
 
 import gutsandgun.kite_sendmanager.dto.SendingDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
+import gutsandgun.kite_sendmanager.dto.SendingRuleDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SendingService {
 
-    Long insertSending(SendingDTO sendingDTO, String userId);    // 발송 저장
+    // 발송 저장
+    Long insertSending(SendingDTO sendingDTO, String userId);
 
-    SendingDTO startSending(Long sendingId);   // 발송 시작
+    // 발송 정보 조회
+    SendingDTO getSending(Long sendingId);
 
-    List<SendingMsgDTO> selectSendMsgList(Long sendingID);
+    // 발송 메시지 리스트 조회
+    List<SendingMsgDTO> getSendMsgList(Long sendingID);
+
+    // 중계사 분배 비율에 따른 메시지 분배
+    List<Map<Long, List<SendingMsgDTO>>> distributeMessageCustom(List<SendingRuleDTO> sendingRuleDTOList, List<SendingMsgDTO> sendingMsgDTOList);
+
+    // 속도 우선 중계사 비율 분배
+    List<Map<Long, List<SendingMsgDTO>>> distributeMessageSpeed(List<SendingMsgDTO> sendingMsgDTOList);
+
+    // 가격 우선 중계사 비율 분배
+    List<Map<Long, List<SendingMsgDTO>>> distributeMessagePrice(List<SendingMsgDTO> sendingMsgDTOList);
+
+
 }
