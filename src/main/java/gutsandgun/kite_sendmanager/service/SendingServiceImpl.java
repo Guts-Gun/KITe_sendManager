@@ -1,15 +1,14 @@
 package gutsandgun.kite_sendmanager.service;
 
-import gutsandgun.kite_sendmanager.dto.SendingDTO;
-import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
-import gutsandgun.kite_sendmanager.dto.SendingRuleDTO;
-import gutsandgun.kite_sendmanager.dto.SendingScheduleDto;
+import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
 import gutsandgun.kite_sendmanager.entity.write.Sending;
 import gutsandgun.kite_sendmanager.openfeign.SendingSchedulerServiceClient;
+import gutsandgun.kite_sendmanager.publisher.RabbitMQProducer;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingMsgRepository;
 import gutsandgun.kite_sendmanager.repository.write.WriteSendingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class SendingServiceImpl implements SendingService{
 
     @Autowired
@@ -30,10 +30,11 @@ public class SendingServiceImpl implements SendingService{
     @Autowired
     ReadSendingMsgRepository readSendingMsgRepository;
 
-
     @Autowired
     private final SendingSchedulerServiceClient sendingSchedulerServiceClient;
 
+    @Autowired
+    RabbitMQProducer rabbitMQProducer;
 
     @Autowired
     private final ModelMapper mapper;
@@ -77,7 +78,7 @@ public class SendingServiceImpl implements SendingService{
     }
 
     @Override
-    public List<Map<Long, List<SendingMsgDTO>>> distributeMessageCustom(List<SendingRuleDTO> sendingRuleDTOList, List<SendingMsgDTO> sendingMsgDTOList) {
+    public void distributeMessageCustom(SendingDTO sendingDTO, List<SendingRuleDTO> sendingRuleDTOList, List<SendingMsgDTO> sendingMsgDTOList) {
 
         List<Map<Long, List<SendingMsgDTO>>> returnList = new ArrayList<>();
 
@@ -101,16 +102,51 @@ public class SendingServiceImpl implements SendingService{
             }
         });
 
-        return returnList;
+        produceQueue(sendingDTO, returnList);
     }
 
     @Override
-    public List<Map<Long, List<SendingMsgDTO>>> distributeMessageSpeed(List<SendingMsgDTO> sendingMsgDTOList) {
-        return null;
+    public void distributeMessageSpeed(List<SendingMsgDTO> sendingMsgDTOList) {
     }
 
     @Override
-    public List<Map<Long, List<SendingMsgDTO>>> distributeMessagePrice(List<SendingMsgDTO> sendingMsgDTOList) {
-        return null;
+    public void distributeMessagePrice(List<SendingMsgDTO> sendingMsgDTOList) {
+    }
+
+
+
+    public void produceQueue(SendingDTO sendingDTO, List<Map<Long, List<SendingMsgDTO>>> list){
+
+        // MQ produce
+        list.forEach(listMap ->{
+            // SKT
+            List<SendingMsgDTO> broker1SendingMsgDTOList = listMap.get(1L);
+            if(broker1SendingMsgDTOList != null){
+                broker1SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingDTO.getId() + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 1, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
+                    rabbitMQProducer.sendQueue1Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                });
+            }
+
+            // KT
+            List<SendingMsgDTO> broker2SendingMsgDTOList = listMap.get(2l);
+            if(broker2SendingMsgDTOList != null) {
+                broker2SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingDTO.getId() + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 2, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
+                    rabbitMQProducer.sendQueue2Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                });
+            }
+
+            // LG
+            List<SendingMsgDTO> broker3SendingMsgDTOList = listMap.get(3L);
+            if (broker3SendingMsgDTOList != null){
+                broker3SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingDTO.getId() + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 3, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
+                    rabbitMQProducer.sendQueue3Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                });
+            }
+
+        });
+
     }
 }

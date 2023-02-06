@@ -1,7 +1,9 @@
 package gutsandgun.kite_sendmanager.controller;
 
 import gutsandgun.kite_sendmanager.dto.*;
+import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
 import gutsandgun.kite_sendmanager.publisher.RabbitMQProducer;
+import gutsandgun.kite_sendmanager.service.SendingBlockService;
 import gutsandgun.kite_sendmanager.service.SendingRuleService;
 import gutsandgun.kite_sendmanager.service.SendingService;
 import gutsandgun.kite_sendmanager.type.SendingRuleType;
@@ -13,10 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value="sending")
@@ -28,8 +28,7 @@ public class SendingController {
 
     private final SendingRuleService sendingRuleService;
 
-    @Autowired
-    RabbitMQProducer rabbitMQProducer;
+    private final SendingBlockService sendingBlockService;
 
     /**
      * 발송 요청 시 sending 등록
@@ -46,6 +45,7 @@ public class SendingController {
         SendingDTO sendingDTO = sendMsgRequestDTO.getSendingDTO();
         sendingDTO.setRegId(userId);
         sendingDTO.setUserId(userId);
+        sendingDTO.setSender(sendMsgRequestDTO.getSender());
 
         Long sendingId = sendingService.insertSending(sendingDTO, userId);
 
@@ -66,67 +66,34 @@ public class SendingController {
     @PostMapping("/start")
     public ResponseEntity<Long> startSending(@RequestBody Map<String, Long> map) {
 
-        Long sendingId = map.get("sendingId");
-
         // 발송 정보
-        SendingDTO sendingDTO = sendingService.getSending(sendingId);
+        SendingDTO sendingDTO = sendingService.getSending(map.get("sendingId"));
         log.info("Service: sendingManager, type: sendingStart, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", time: "+new Date().getTime());
 
         // 발송 메시지 리스트
-        List<SendingMsgDTO> sendingMsgDTOList = sendingService.getSendMsgList(sendingId);
+        List<SendingMsgDTO> sendingMsgDTOList = sendingService.getSendMsgList(sendingDTO.getId());
 
-        // 분배 리스트
-        List<Map<Long, List<SendingMsgDTO>>> list = new ArrayList<>();
+        // 수신거부 필터링 발송 메시지 리스트
+        List<SendingMsgDTO> resultList = sendingBlockService.replaceSending(sendingDTO, sendingMsgDTOList);
 
         switch (sendingDTO.getSendingRuleType()) {
             case CUSTOM:
-                // 중계사 발송 분배 비율 리스트
-                List<SendingRuleDTO> sendingRuleDTOList = sendingRuleService.selectSendingRule(sendingId);
-                list = sendingService.distributeMessageCustom(sendingRuleDTOList, sendingMsgDTOList);
+                List<SendingRuleDTO> sendingRuleDTOList = sendingRuleService.selectSendingRule(sendingDTO.getId()); // 중계사 발송 분배 비율 리스트
+                sendingService.distributeMessageCustom(sendingDTO, sendingRuleDTOList, resultList);
                 break;
 
             case SPEED:
-                list = sendingService.distributeMessageSpeed(sendingMsgDTOList);
+                sendingService.distributeMessageSpeed(resultList);
                 break;
 
             case PRICE:
-                list = sendingService.distributeMessagePrice(sendingMsgDTOList);
+                sendingService.distributeMessagePrice(resultList);
                 break;
         }
-
-        // MQ produce
-        list.forEach(listMap ->{
-            // SKT
-            List<SendingMsgDTO> broker1SendingMsgDTOList = listMap.get(1L);
-            if(broker1SendingMsgDTOList != null){
-                broker1SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 1, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
-                    rabbitMQProducer.sendQueue1Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
-                });
-            }
-
-            // KT
-            List<SendingMsgDTO> broker2SendingMsgDTOList = listMap.get(2l);
-            if(broker2SendingMsgDTOList != null) {
-                broker2SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 2, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
-                    rabbitMQProducer.sendQueue2Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
-                });
-            }
-
-            // LG
-            List<SendingMsgDTO> broker3SendingMsgDTOList = listMap.get(3L);
-            if (broker3SendingMsgDTOList != null){
-                broker3SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 3, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
-                    rabbitMQProducer.sendQueue3Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
-                });
-            }
-
-        });
-
-        return new ResponseEntity<>(sendingId, HttpStatus.OK);
+        return new ResponseEntity<>(sendingDTO.getId(), HttpStatus.OK);
     }
+
+
 
 
 
