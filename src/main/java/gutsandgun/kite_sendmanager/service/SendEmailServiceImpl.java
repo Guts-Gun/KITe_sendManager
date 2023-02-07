@@ -17,33 +17,7 @@ import java.util.*;
 @Log4j2
 public class SendEmailServiceImpl implements SendEmailService{
 
-    @Autowired
-    private final SendingService sendingService;
-
-    @Autowired
-    private final SendingBlockService sendingBlockService;
-
-    @Autowired
-    private final SendMsgService sendMsgService;
-
-
-
-    @Autowired
     private final RabbitMQProducer rabbitMQProducer;
-
-
-    @Override
-    public void getMsgReplaceInfo(Map<String, Long> map){
-        Long sendingId = map.get("sendingId");
-        Long txId = map.get("txId");
-
-        SendingDTO sendingDTO = sendingService.getSending(sendingId);
-        SendReplaceDTO sendReplaceDTO = sendingBlockService.getReplaceInfo(txId, sendingDTO.getSendingType());
-        SendingMsgDTO sendingMsgDTO = sendMsgService.getSendMsg(sendingId, txId);
-
-        sendMsgReplaceEmail(sendingDTO, sendReplaceDTO, sendingMsgDTO);
-    }
-
 
     @Override
     public void sendMsgReplaceEmail(SendingDTO sendingDTO, SendReplaceDTO sendReplaceDTO, SendingMsgDTO sendingMsgDTO) {

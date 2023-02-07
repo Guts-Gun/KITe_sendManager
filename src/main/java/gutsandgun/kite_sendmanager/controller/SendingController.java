@@ -102,7 +102,15 @@ public class SendingController {
      */
     @PostMapping("/replaceSend/Msg")
     public ResponseEntity<String> replaceSendMsg(@RequestBody Map<String, Long> map) {
-        sendEmailService.getMsgReplaceInfo(map);
+        Long sendingId = map.get("sendingId");
+        Long txId = map.get("txId");
+
+        SendingDTO sendingDTO = sendingService.getSending(sendingId);
+        SendReplaceDTO sendReplaceDTO = sendingBlockService.getReplaceInfo(txId, sendingDTO.getSendingType());
+        SendingMsgDTO sendingMsgDTO = sendMsgService.getSendMsg(sendingId, txId);
+
+        sendEmailService.sendMsgReplaceEmail(sendingDTO, sendReplaceDTO, sendingMsgDTO);
+
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
