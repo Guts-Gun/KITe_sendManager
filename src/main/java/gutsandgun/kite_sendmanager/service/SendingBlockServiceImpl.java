@@ -3,18 +3,14 @@ package gutsandgun.kite_sendmanager.service;
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.entity.read.SendReplace;
 import gutsandgun.kite_sendmanager.entity.read.SendingBlock;
-import gutsandgun.kite_sendmanager.entity.write.SendingRule;
-import gutsandgun.kite_sendmanager.publisher.RabbitMQProducer;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingBlockRepository;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingReplaceRepository;
 import gutsandgun.kite_sendmanager.repository.write.WriteSendingBlockRepository;
-import gutsandgun.kite_sendmanager.repository.write.WriteSendingRuleRepository;
 import gutsandgun.kite_sendmanager.type.SendingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,16 +24,16 @@ import java.util.stream.Collectors;
 public class SendingBlockServiceImpl implements SendingBlockService{
 
     @Autowired
-    ReadSendingBlockRepository readSendingBlockRepository;
+    private final ReadSendingBlockRepository readSendingBlockRepository;
 
     @Autowired
-    WriteSendingBlockRepository writeSendingBlockRepository;
+    private final WriteSendingBlockRepository writeSendingBlockRepository;
 
     @Autowired
-    ReadSendingReplaceRepository readSendingReplaceRepository;
+    private final ReadSendingReplaceRepository readSendingReplaceRepository;
 
     @Autowired
-    RabbitMQProducer rabbitMQProducer;
+    private final SendEmailService sendEmailService;
 
     @Autowired
     private final ModelMapper mapper;
@@ -71,16 +67,11 @@ public class SendingBlockServiceImpl implements SendingBlockService{
         ).collect(Collectors.toList());
 
 
-
+        // 수신거부 플랫폼 대체발송
         replaceMsgList.forEach(sendingMsgDTO -> {
-
             if(sendingDTO.getReplaceYn().equals("Y")) {
                 SendReplaceDTO sendReplaceDTO = getReplaceInfo(sendingMsgDTO.getId(), sendingDTO.getSendingType());
-                SendingMsgDTO replaceMsgDTO = sendingMsgDTO;
-                replaceMsgDTO.setSender(sendReplaceDTO.getSender());
-                replaceMsgDTO.setReceiver(sendReplaceDTO.getReceiver());
-
-//                rabbitMQProducer.sendQueue4Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                sendEmailService.sendMsgReplaceEmail(sendingDTO, sendReplaceDTO, sendingMsgDTO);
             }else{
                 log.info("Service: sendingManager, type: blocking, success: fail, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", TXId: "+sendingMsgDTO.getId()+", time: "+new Date().getTime());
             }

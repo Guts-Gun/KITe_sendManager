@@ -2,7 +2,6 @@ package gutsandgun.kite_sendmanager.service;
 
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.entity.write.SendingBlock;
-import gutsandgun.kite_sendmanager.entity.write.SendingRule;
 import gutsandgun.kite_sendmanager.type.SendingType;
 
 import java.util.Date;
