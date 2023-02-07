@@ -45,7 +45,6 @@ public class SendingBlock extends BaseTimeEntity {
 	@ColumnDefault("false")
 	private Boolean isDeleted = false;
 
-
 	@Comment("생성자")
 	@Column(name = "reg_id", nullable = false, length = 20)
 	private String regId;

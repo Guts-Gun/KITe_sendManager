@@ -68,6 +68,16 @@ public class SendingEmail extends BaseTimeEntity {
 	private String var3;
 
 
-	    @ColumnDefault("false")
+	@ColumnDefault("false")
 	private Boolean isDeleted = false;
+
+
+	@Comment("생성자")
+	@Column(name = "reg_id", nullable = false, length = 20)
+	private String regId;
+
+	@Comment("수정자")
+	@Column(name = "mod_id", length = 20)
+	private String modId;
+
 }
