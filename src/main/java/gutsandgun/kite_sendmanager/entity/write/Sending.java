@@ -40,7 +40,7 @@ public class Sending extends BaseTimeEntity {
     private String replaceYn;
 
     @Comment("메세지 갯수")
-    private Long totalSending;
+    private Long totalMessage;
 
     @Comment("입력시각")
     private Long inputTime;
