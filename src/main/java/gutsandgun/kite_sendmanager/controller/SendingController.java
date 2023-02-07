@@ -92,7 +92,19 @@ public class SendingController {
     }
 
 
-
+    /**
+     * 이메일 대체 발송 요청
+     *
+     * @author solbiko
+     * @param map sendingId 발송번호
+     * @param map txId 메시지번호
+     * @return String success
+     */
+    @PostMapping("/replaceSend/Msg")
+    public ResponseEntity<String> replaceSendMsg(@RequestBody Map<String, Long> map) {
+        sendEmailService.getMsgReplaceInfo(map);
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
 
 
 }
