@@ -34,7 +34,6 @@ public class SendEmailServiceImpl implements SendEmailService{
     }
 
     public void replaceProduceQueue(SendingDTO sendingDTO, SendingEmailDTO sendingEmailDTO) {
-//        log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingDTO.getId() + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 1, TXId: " + sendingEmailDTO.getId() + ", time: " + new Date().getTime());
         rabbitMQProducer.sendEmailQueue1Message(sendingEmailDTO, sendingDTO.getId(), SendingType.EMAIL);
     }
 

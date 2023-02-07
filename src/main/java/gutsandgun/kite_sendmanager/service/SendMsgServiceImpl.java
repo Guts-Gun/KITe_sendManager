@@ -92,7 +92,6 @@ public class SendMsgServiceImpl implements SendMsgService {
             List<SendingMsgDTO> broker1SendingMsgDTOList = listMap.get(1L);
             if(broker1SendingMsgDTOList != null){
                 broker1SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingDTO.getId() + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 1, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
                     rabbitMQProducer.sendQueue1Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
                 });
             }
@@ -101,7 +100,6 @@ public class SendMsgServiceImpl implements SendMsgService {
             List<SendingMsgDTO> broker2SendingMsgDTOList = listMap.get(2l);
             if(broker2SendingMsgDTOList != null) {
                 broker2SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingDTO.getId() + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 2, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
                     rabbitMQProducer.sendQueue2Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
                 });
             }
@@ -110,7 +108,6 @@ public class SendMsgServiceImpl implements SendMsgService {
             List<SendingMsgDTO> broker3SendingMsgDTOList = listMap.get(3L);
             if (broker3SendingMsgDTOList != null){
                 broker3SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                    log.info("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingDTO.getId() + ", sendingType: " + sendingDTO.getSendingType().toString() + ", brokerId: 3, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime());
                     rabbitMQProducer.sendQueue3Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
                 });
             }
