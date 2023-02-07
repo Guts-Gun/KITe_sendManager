@@ -1,10 +1,7 @@
 package gutsandgun.kite_sendmanager.service;
 
-import gutsandgun.kite_sendmanager.dto.SendMsgRequestDTO;
 import gutsandgun.kite_sendmanager.dto.SendingRuleDTO;
-import gutsandgun.kite_sendmanager.entity.write.Sending;
 import gutsandgun.kite_sendmanager.entity.write.SendingRule;
-import gutsandgun.kite_sendmanager.repository.write.WriteSendingRepository;
 import gutsandgun.kite_sendmanager.repository.write.WriteSendingRuleRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,14 +10,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SendingRuleServiceImpl implements SendingRuleService{
 
     @Autowired
-    WriteSendingRuleRepository writeSendingRuleRepository;
+    private final WriteSendingRuleRepository writeSendingRuleRepository;
 
     @Autowired
     private final ModelMapper mapper;

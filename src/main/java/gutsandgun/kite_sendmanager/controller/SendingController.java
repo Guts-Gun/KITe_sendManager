@@ -1,22 +1,16 @@
 package gutsandgun.kite_sendmanager.controller;
 
 import gutsandgun.kite_sendmanager.dto.*;
-import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
-import gutsandgun.kite_sendmanager.publisher.RabbitMQProducer;
-import gutsandgun.kite_sendmanager.service.SendingBlockService;
-import gutsandgun.kite_sendmanager.service.SendingRuleService;
-import gutsandgun.kite_sendmanager.service.SendingService;
+import gutsandgun.kite_sendmanager.service.*;
 import gutsandgun.kite_sendmanager.type.SendingRuleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value="sending")
@@ -25,6 +19,10 @@ import java.util.stream.Collectors;
 public class SendingController {
 
     private final SendingService sendingService;
+
+    private final SendMsgService sendMsgService;
+
+    private final SendEmailService sendEmailService;
 
     private final SendingRuleService sendingRuleService;
 
@@ -71,7 +69,7 @@ public class SendingController {
         log.info("Service: sendingManager, type: sendingStart, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", time: "+new Date().getTime());
 
         // 발송 메시지 리스트
-        List<SendingMsgDTO> sendingMsgDTOList = sendingService.getSendMsgList(sendingDTO.getId());
+        List<SendingMsgDTO> sendingMsgDTOList = sendMsgService.getSendMsgList(sendingDTO.getId());
 
         // 수신거부 필터링 발송 메시지 리스트
         List<SendingMsgDTO> resultList = sendingBlockService.replaceSending(sendingDTO, sendingMsgDTOList);
@@ -79,15 +77,15 @@ public class SendingController {
         switch (sendingDTO.getSendingRuleType()) {
             case CUSTOM:
                 List<SendingRuleDTO> sendingRuleDTOList = sendingRuleService.selectSendingRule(sendingDTO.getId()); // 중계사 발송 분배 비율 리스트
-                sendingService.distributeMessageCustom(sendingDTO, sendingRuleDTOList, resultList);
+                sendMsgService.distributeMessageCustom(sendingDTO, sendingRuleDTOList, resultList);
                 break;
 
             case SPEED:
-                sendingService.distributeMessageSpeed(resultList);
+                sendMsgService.distributeMessageSpeed(resultList);
                 break;
 
             case PRICE:
-                sendingService.distributeMessagePrice(resultList);
+                sendMsgService.distributeMessagePrice(resultList);
                 break;
         }
         return new ResponseEntity<>(sendingDTO.getId(), HttpStatus.OK);
