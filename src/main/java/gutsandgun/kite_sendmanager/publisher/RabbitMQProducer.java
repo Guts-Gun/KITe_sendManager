@@ -1,37 +1,43 @@
 package gutsandgun.kite_sendmanager.publisher;
 
+import gutsandgun.kite_sendmanager.dto.SendingEmailDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
-import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
 import gutsandgun.kite_sendmanager.type.SendingType;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.Map;
 
 @Service
 public class RabbitMQProducer {
 
-    @Value("${rabbitmq.queue1.exchange}")
+    @Value("${rabbitmq.sms.queue1.exchange}")
     private String exchange1;
 
-    @Value("${rabbitmq.queue2.exchange}")
+    @Value("${rabbitmq.sms.queue2.exchange}")
     private String exchange2;
 
-    @Value("${rabbitmq.queue3.exchange}")
+    @Value("${rabbitmq.sms.queue3.exchange}")
     private String exchange3;
 
-    @Value("${rabbitmq.routing.key.queue1}")
+
+    @Value("${rabbitmq.sms.routing.key.queue1}")
     private String routingKey1;
 
-    @Value("${rabbitmq.routing.key.queue2}")
+    @Value("${rabbitmq.sms.routing.key.queue2}")
     private String routingKey2;
 
-    @Value("${rabbitmq.routing.key.queue3}")
+    @Value("${rabbitmq.sms.routing.key.queue3}")
     private String routingKey3;
+
+
+    @Value("${rabbitmq.email.queue1.exchange}")
+    private String emailExchange;
+
+    @Value("${rabbitmq.email.routing.key.queue1}")
+    private String emailRoutingKey1;
+
+    @Value("${rabbitmq.email.routing.key.queue2}")
+    private String emailRoutingKey2;
 
 
     private RabbitTemplate rabbitTemplate;
@@ -50,5 +56,13 @@ public class RabbitMQProducer {
 
     public void sendQueue3Message(SendingMsgDTO sendingMsgDTO, Long sendingId, SendingType sendingType){
         rabbitTemplate.convertAndSend(exchange3, routingKey3, sendingMsgDTO);
+    }
+
+    public void sendEmailQueue1Message(SendingEmailDTO sendingEmailDTO, Long sendingId, SendingType sendingType){
+        rabbitTemplate.convertAndSend(emailExchange, emailRoutingKey1, sendingEmailDTO);
+    }
+
+    public void sendEmailQueue2Message(SendingEmailDTO sendingEmailDTO, Long sendingId, SendingType sendingType){
+        rabbitTemplate.convertAndSend(exchange3, emailRoutingKey2, sendingEmailDTO);
     }
 }
