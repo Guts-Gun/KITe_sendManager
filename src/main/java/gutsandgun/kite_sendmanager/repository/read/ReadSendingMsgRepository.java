@@ -10,4 +10,6 @@ import java.util.List;
 public interface ReadSendingMsgRepository extends JpaRepository<SendingMsg, Long> {
 
     List<SendingMsg> findBySendingId(Long sendingId);
+
+    SendingMsg findBySendingIdAndId(Long sendingId, Long id);
 }
