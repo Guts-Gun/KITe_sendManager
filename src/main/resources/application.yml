@@ -6,6 +6,7 @@ spring:
     port: 11005
     username: gutsandgun
     password: gutsandgun
+    virtual-host: gutsandgun
 
   writedb:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -62,6 +63,12 @@ keycloak:
 
 
 rabbitmq:
+  api:
+    port: 15672
+    queue: /api/queues
+    queue-detail: /api/queues/
+    auth: Z3V0c2FuZGd1bjpndXRzYW5kZ3Vu  #gutsandgun.kro.kr
+#    auth: c29sYml0ZXN0OnNvbGJpdGVzdDEyMTIh  #172.16.226.148
   sms:
     queue1:
       name: SKT
