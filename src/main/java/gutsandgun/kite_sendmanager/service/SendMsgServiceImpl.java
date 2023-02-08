@@ -124,14 +124,16 @@ public class SendMsgServiceImpl implements SendMsgService {
 
     @Override
     public void distributeMessagePrice(SendingDTO sendingDTO, List<SendingMsgDTO> sendingMsgDTOList) {
+        List<BrokerDTO> brokerDTOList = getMsgBrokerList();
+        BrokerDTO broker = brokerDTOList.stream().min((x, y) -> (int) (x.getPrice() - y.getPrice())).orElse(new BrokerDTO());
+
         Map<Long, List<SendingMsgDTO>> returnMap = new HashMap<>();
+        returnMap.put(broker.getId(), sendingMsgDTOList);
         produceQueue(sendingDTO, returnMap);
     }
 
 
     public void produceQueue(SendingDTO sendingDTO, Map<Long, List<SendingMsgDTO>> map){
-
-        // MQ produce
 
         // SKT
         List<SendingMsgDTO> broker1SendingMsgDTOList = map.get(1L);
@@ -156,7 +158,6 @@ public class SendMsgServiceImpl implements SendMsgService {
                 rabbitMQProducer.sendQueue3Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
             });
         }
-
 
     }
 
