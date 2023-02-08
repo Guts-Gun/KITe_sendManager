@@ -1,5 +1,6 @@
 package gutsandgun.kite_sendmanager.entity.write;
 
+import gutsandgun.kite_sendmanager.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql= "UPDATE sending_rule SET is_deleted=true WHERE id = ?")
 @Table(name="sending_rule")
 @DynamicInsert
-public class SendingRule {
+public class SendingRule extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
