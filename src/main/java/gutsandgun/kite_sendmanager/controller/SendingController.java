@@ -1,5 +1,7 @@
 package gutsandgun.kite_sendmanager.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.service.*;
 import gutsandgun.kite_sendmanager.type.SendingRuleType;
@@ -27,6 +29,7 @@ public class SendingController {
     private final SendingRuleService sendingRuleService;
 
     private final SendingBlockService sendingBlockService;
+
 
     /**
      * 발송 요청 시 sending 등록
@@ -62,7 +65,7 @@ public class SendingController {
      * @return long sendingId
      */
     @PostMapping("/start")
-    public ResponseEntity<Long> startSending(@RequestBody Map<String, Long> map) {
+    public ResponseEntity<Long> startSending(@RequestBody Map<String, Long> map) throws JsonProcessingException {
 
         // 발송 정보
         SendingDTO sendingDTO = sendingService.getSending(map.get("sendingId"));
@@ -81,11 +84,11 @@ public class SendingController {
                 break;
 
             case SPEED:
-                sendMsgService.distributeMessageSpeed(resultList);
+                sendMsgService.distributeMessageSpeed(sendingDTO, resultList);
                 break;
 
             case PRICE:
-                sendMsgService.distributeMessagePrice(resultList);
+                sendMsgService.distributeMessagePrice(sendingDTO, resultList);
                 break;
         }
         return new ResponseEntity<>(sendingDTO.getId(), HttpStatus.OK);
