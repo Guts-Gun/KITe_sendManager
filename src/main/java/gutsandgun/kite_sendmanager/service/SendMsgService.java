@@ -18,9 +18,9 @@ public interface SendMsgService {
     void distributeMessageCustom(SendingDTO sendingDTO, List<SendingRuleDTO> sendingRuleDTOList, List<SendingMsgDTO> sendingMsgDTOList);
 
     // 속도 우선 중계사 비율 분배
-    void distributeMessageSpeed(List<SendingMsgDTO> sendingMsgDTOList);
+    void distributeMessageSpeed(SendingDTO sendingDTO, List<SendingMsgDTO> sendingMsgDTOList);
 
     // 가격 우선 중계사 비율 분배
-    void distributeMessagePrice(List<SendingMsgDTO> sendingMsgDTOList);
+    void distributeMessagePrice(SendingDTO sendingDTO, List<SendingMsgDTO> sendingMsgDTOList);
 
 }
