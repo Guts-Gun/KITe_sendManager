@@ -46,7 +46,7 @@ public class RabbitMQService {
         String vhost = VHOST;
         String auth = AUTH;
 
-        String BASIC_URL = "http://" + host + ":" + port + url + vhost + "/"+ queueName;
+        String BASIC_URL = "https://" + host + ":" + port + url + vhost + "/"+ queueName;
         UriComponents builder = UriComponentsBuilder.fromHttpUrl(BASIC_URL).build();
 
         HttpHeaders headers = new HttpHeaders();
