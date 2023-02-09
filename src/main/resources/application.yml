@@ -64,7 +64,7 @@ keycloak:
 
 rabbitmq:
   api:
-    port: 15672
+    port: 10005
     queue: /api/queues
     queue-detail: /api/queues/
     auth: Z3V0c2FuZGd1bjpndXRzYW5kZ3Vu  #gutsandgun.kro.kr
