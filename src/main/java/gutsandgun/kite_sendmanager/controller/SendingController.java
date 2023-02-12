@@ -3,6 +3,7 @@ package gutsandgun.kite_sendmanager.controller;
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.service.*;
 import gutsandgun.kite_sendmanager.type.SendingRuleType;
+import gutsandgun.kite_sendmanager.type.SendingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -70,7 +71,13 @@ public class SendingController {
         log.info("Service: sendingManager, type: sendingStart, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", time: "+new Date().getTime());
 
         // 발송 메시지 리스트
-        List<SendingMsgDTO> sendingMsgDTOList = sendMsgService.getSendMsgList(sendingDTO.getId());
+        List<SendingMsgDTO> sendingMsgDTOList = null;
+        SendingType sendingType = sendingDTO.getSendingType();
+        if(sendingType.equals(SendingType.SMS) || sendingType.equals(SendingType.MMS)){
+            sendingMsgDTOList =  sendMsgService.getSendMsgList(sendingDTO.getId());
+        }else if(sendingType.equals(SendingType.EMAIL)){
+            sendingMsgDTOList =  sendEmailService.getSendMsgList(sendingDTO.getId());
+        }
 
         // 수신거부 필터링 발송 메시지 리스트
         List<SendingMsgDTO> resultList = sendingBlockService.replaceSending(sendingDTO, sendingMsgDTOList);

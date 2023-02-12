@@ -86,7 +86,15 @@ public class SendMsgServiceImpl implements SendMsgService {
         List<Map<String, Integer>> brokerRuleList = new ArrayList<Map<String, Integer>>();
         AtomicInteger totalRate = new AtomicInteger();      // 전체 비율
 
-        List<BrokerDTO> brokerDTOList = getMsgBrokerList(); // 중계사 리스트
+        List<BrokerDTO> brokerDTOList = null;
+
+        SendingType sendingType = sendingDTO.getSendingType();
+        if(sendingType.equals(SendingType.SMS) || sendingType.equals(SendingType.MMS)){
+            brokerDTOList = getMsgBrokerList(); // 중계사 리스트
+        }else if(sendingType.equals(SendingType.EMAIL)){
+            brokerDTOList = getEmailBrokerList(); // 중계사 리스트
+        }
+
         brokerDTOList.forEach(brokerDTO -> {
 
             Map<String, Object> queueInfo = rabbitMQService.getQueueInfo(brokerDTO.getName());
@@ -124,7 +132,14 @@ public class SendMsgServiceImpl implements SendMsgService {
 
     @Override
     public void distributeMessagePrice(SendingDTO sendingDTO, List<SendingMsgDTO> sendingMsgDTOList) {
-        List<BrokerDTO> brokerDTOList = getMsgBrokerList();
+        List<BrokerDTO> brokerDTOList = null;
+        SendingType sendingType = sendingDTO.getSendingType();
+        if(sendingType.equals(SendingType.SMS) || sendingType.equals(SendingType.MMS)){
+            brokerDTOList = getMsgBrokerList(); // 중계사 리스트
+        }else if(sendingType.equals(SendingType.EMAIL)){
+            brokerDTOList = getEmailBrokerList(); // 중계사 리스트
+        }
+
         BrokerDTO broker = brokerDTOList.stream().min((x, y) -> (int) (x.getPrice() - y.getPrice())).orElse(new BrokerDTO());
 
         Map<Long, List<SendingMsgDTO>> returnMap = new HashMap<>();
@@ -159,6 +174,35 @@ public class SendMsgServiceImpl implements SendMsgService {
             });
         }
 
+        List<SendingMsgDTO> broker4SendingMsgDTOList = map.get(4L);
+        if(broker4SendingMsgDTOList != null){
+            broker4SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                SendingEmailDTO sendingEmailDTO = new SendingEmailDTO();
+                sendingEmailDTO.setSendingId(sendingMsgDTO.getSendingId());
+                sendingEmailDTO.setReceiver(sendingMsgDTO.getReceiver());
+                sendingEmailDTO.setId(sendingMsgDTO.getId());
+                sendingEmailDTO.setName(sendingMsgDTO.getName());
+                sendingEmailDTO.setSender(sendingMsgDTO.getSender());
+                sendingEmailDTO.setRegId(sendingMsgDTO.getRegId());
+                rabbitMQProducer.sendEmailQueue1Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+            });
+        }
+
+
+        List<SendingMsgDTO> broker5SendingMsgDTOList = map.get(5L);
+        if(broker5SendingMsgDTOList != null){
+            broker5SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                SendingEmailDTO sendingEmailDTO = new SendingEmailDTO();
+                sendingEmailDTO.setSendingId(sendingMsgDTO.getSendingId());
+                sendingEmailDTO.setReceiver(sendingMsgDTO.getReceiver());
+                sendingEmailDTO.setId(sendingMsgDTO.getId());
+                sendingEmailDTO.setName(sendingMsgDTO.getName());
+                sendingEmailDTO.setSender(sendingMsgDTO.getSender());
+                sendingEmailDTO.setRegId(sendingMsgDTO.getRegId());
+                rabbitMQProducer.sendEmailQueue2Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+            });
+        }
+
     }
 
 
@@ -171,6 +215,17 @@ public class SendMsgServiceImpl implements SendMsgService {
 
         return brokerDTOList;
     }
+
+    public List<BrokerDTO> getEmailBrokerList(){
+        List<Broker> BrokerList = readBrokerRepository.findBySendingType(SendingType.EMAIL);
+        List<BrokerDTO> brokerDTOList = new ArrayList<>();
+        BrokerList.forEach(broker -> {
+            brokerDTOList.add(mapper.map(broker,BrokerDTO.class));
+        });
+
+        return brokerDTOList;
+    }
+
 
 
 }
