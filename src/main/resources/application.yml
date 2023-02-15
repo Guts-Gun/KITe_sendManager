@@ -100,4 +100,4 @@ rabbitmq:
 
 feign:
   url :
-    sending-scheduler : localhost:8003
+    sending-scheduler : gutsandgun.kro.kr:30000
