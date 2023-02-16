@@ -77,6 +77,10 @@ public class SendMsgServiceImpl implements SendMsgService {
             }
         });
 
+        log.info("distributeMessageCustom==========================================================");
+        log.info(returnMap);
+        log.info("distributeMessageCustom==========================================================");
+
         produceQueue(sendingDTO, returnMap);
     }
 
@@ -149,6 +153,10 @@ public class SendMsgServiceImpl implements SendMsgService {
 
 
     public void produceQueue(SendingDTO sendingDTO, Map<Long, List<SendingMsgDTO>> map){
+
+        log.info("produceQueue==========================================================");
+        log.info(map);
+        log.info("produceQueue==========================================================");
 
         // SKT
         List<SendingMsgDTO> broker1SendingMsgDTOList = map.get(1L);

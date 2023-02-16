@@ -79,6 +79,10 @@ public class SendingController {
             sendingMsgDTOList =  sendEmailService.getSendMsgList(sendingDTO.getId());
         }
 
+        log.info("============================================================================");
+        log.info(sendingMsgDTOList);
+        log.info("============================================================================");
+
         // 수신거부 필터링 발송 메시지 리스트
         List<SendingMsgDTO> resultList = sendingBlockService.replaceSending(sendingDTO, sendingMsgDTOList);
 
