@@ -33,13 +33,13 @@ public abstract class BaseTimeEntity {
     public void onPreUpdate() {
         this.modDt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
     }
-    public LocalDateTime getRegDt() {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-        return LocalDateTime.parse(regDt, format);
-    }
-
-    public LocalDateTime getModDt() {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-        return LocalDateTime.parse(modDt, format);
-    }
+//    public LocalDateTime getRegDt() {
+//        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+//        return LocalDateTime.parse(regDt, format);
+//    }
+//
+//    public LocalDateTime getModDt() {
+//        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+//        return LocalDateTime.parse(modDt, format);
+//    }
 }

@@ -26,18 +26,18 @@ public class SendingCache {
     private final ReadSendingEmailRepository readSendingEmailRepository;
 
 
-    @Cacheable(value="sending" , key = "#sendingId" ,cacheManager = "redisCacheManager")
+    @Cacheable(value="sending" , key = "#sendingId" ,cacheManager = "CacheManager")
     public Sending insertSending(Long sendingId, Sending sending){
         return sending;
     }
 
-    @Cacheable(value="sendingMsg" , key = "#sendingId" ,cacheManager = "redisCacheManager")
+    @Cacheable(value="sendingMsg" , key = "#sendingId" ,cacheManager = "CacheManager")
     public List<SendingMsg> getSendingMsg(Long sendingId){
         List<SendingMsg> sendingMsgList = readSendingMsgRepository.findBySendingId(sendingId);
         return sendingMsgList;
     }
 
-    @Cacheable(value="sendingEmail" , key = "#sendingId" ,cacheManager = "redisCacheManager")
+    @Cacheable(value="sendingEmail" , key = "#sendingId" ,cacheManager = "CacheManager")
     public  List<SendingEmail> getSendingEmail(Long sendingId){
         List<SendingEmail> sendingEmailList =  readSendingEmailRepository.findBySendingId(sendingId);
         return sendingEmailList;
