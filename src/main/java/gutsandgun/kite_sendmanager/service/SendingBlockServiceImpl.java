@@ -73,7 +73,7 @@ public class SendingBlockServiceImpl implements SendingBlockService{
                 SendReplaceDTO sendReplaceDTO = getReplaceInfo(sendingMsgDTO.getId(), sendingDTO.getSendingType());
                 sendEmailService.sendMsgReplaceEmail(sendingDTO, sendReplaceDTO, sendingMsgDTO);
             }else{
-                log.info("Service: sendingManager, type: blocking, success: fail, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", TXId: "+sendingMsgDTO.getId()+", time: "+new Date().getTime());
+                System.out.println("Service: sendingManager, type: blocking, success: fail, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", TXId: "+sendingMsgDTO.getId()+", time: "+new Date().getTime()+"@");
             }
         });
 

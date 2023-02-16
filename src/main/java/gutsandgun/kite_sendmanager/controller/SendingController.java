@@ -68,7 +68,7 @@ public class SendingController {
 
         // 발송 정보
         SendingDTO sendingDTO = sendingService.getSending(map.get("sendingId"));
-        log.info("Service: sendingManager, type: sendingStart, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", time: "+new Date().getTime());
+        System.out.println("Service: sendingManager, type: sendingStart, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", time: "+new Date().getTime()+"@");
 
         // 발송 메시지 리스트
         List<SendingMsgDTO> sendingMsgDTOList = null;
