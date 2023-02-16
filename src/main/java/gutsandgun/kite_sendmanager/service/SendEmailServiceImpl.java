@@ -24,9 +24,9 @@ public class SendEmailServiceImpl implements SendEmailService{
 
     private final RabbitMQProducer rabbitMQProducer;
 
-
     @Autowired
-    private final ReadSendingEmailRepository readSendingEmailRepository;
+    private final SendingCache sendingCache;
+
 
     @Autowired
     private final ModelMapper mapper;
@@ -34,7 +34,7 @@ public class SendEmailServiceImpl implements SendEmailService{
 
     @Override
     public List<SendingMsgDTO> getSendMsgList(Long sendingId){
-        List<SendingEmail> sendingMsgList =  readSendingEmailRepository.findBySendingId(sendingId);
+        List<SendingEmail> sendingMsgList = sendingCache.getSendingEmail(sendingId);
         List<SendingMsgDTO> sendingMsgDTOList = new ArrayList<>();
         sendingMsgList.forEach(SendingMsg -> {
             sendingMsgDTOList.add(mapper.map(SendingMsg,SendingMsgDTO.class));
