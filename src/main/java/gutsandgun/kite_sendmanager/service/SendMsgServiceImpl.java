@@ -1,5 +1,7 @@
 package gutsandgun.kite_sendmanager.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.entity.read.Broker;
 import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
@@ -40,16 +42,21 @@ public class SendMsgServiceImpl implements SendMsgService {
     @Autowired
     private final ModelMapper mapper;
 
-
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public List<SendingMsgDTO> getSendMsgList(Long sendingId){
-        List<SendingMsg> sendingMsgList =  sendingCache.getSendingMsg(sendingId);
-        List<SendingMsgDTO> sendingMsgDTOList = new ArrayList<>();
-        sendingMsgList.forEach(SendingMsg -> {
-            sendingMsgDTOList.add(mapper.map(SendingMsg,SendingMsgDTO.class));
+    public List<SendingMsgDTO> getSendMsgList(Long sendingId) throws JsonProcessingException {
+        List<String> list = sendingCache.getSendingMsgDTOList(sendingId) ;
+        List<SendingMsgDTO> sendingMsgList =  new ArrayList<>();
+        list.forEach(str -> {
+            try {
+                SendingMsgDTO sendingMsgDTO = objectMapper.readValue(str, SendingMsgDTO.class);
+                sendingMsgList.add(sendingMsgDTO);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         });
-        return sendingMsgDTOList;
+        return sendingMsgList;
     }
 
     @Override

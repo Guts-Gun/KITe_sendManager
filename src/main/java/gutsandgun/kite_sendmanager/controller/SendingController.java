@@ -1,5 +1,6 @@
 package gutsandgun.kite_sendmanager.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.service.*;
 import gutsandgun.kite_sendmanager.type.SendingRuleType;
@@ -40,7 +41,7 @@ public class SendingController {
      */
     @Transactional
     @PostMapping("/req")
-    public ResponseEntity<Long> requestMsg(String userId, @RequestBody SendMsgRequestDTO sendMsgRequestDTO) {
+    public ResponseEntity<Long> requestMsg(String userId, @RequestBody SendMsgRequestDTO sendMsgRequestDTO) throws JsonProcessingException {
 
         SendingDTO sendingDTO = sendMsgRequestDTO.getSendingDTO();
         sendingDTO.setRegId(userId);
@@ -64,7 +65,7 @@ public class SendingController {
      * @return long sendingId
      */
     @PostMapping("/start")
-    public ResponseEntity<Long> startSending(@RequestBody Map<String, Long> map) {
+    public ResponseEntity<Long> startSending(@RequestBody Map<String, Long> map) throws JsonProcessingException {
 
         // 발송 정보
         SendingDTO sendingDTO = sendingService.getSending(map.get("sendingId"));
@@ -78,10 +79,6 @@ public class SendingController {
         }else if(sendingType.equals(SendingType.EMAIL)){
             sendingMsgDTOList =  sendEmailService.getSendMsgList(sendingDTO.getId());
         }
-
-        log.info("============================================================================");
-        log.info(sendingMsgDTOList);
-        log.info("============================================================================");
 
         // 수신거부 필터링 발송 메시지 리스트
         List<SendingMsgDTO> resultList = sendingBlockService.replaceSending(sendingDTO, sendingMsgDTOList);

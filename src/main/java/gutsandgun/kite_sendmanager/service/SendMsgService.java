@@ -1,5 +1,6 @@
 package gutsandgun.kite_sendmanager.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import gutsandgun.kite_sendmanager.dto.SendingDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
 import gutsandgun.kite_sendmanager.dto.SendingRuleDTO;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface SendMsgService {
 
     // 발송 메시지 리스트 조회
-    List<SendingMsgDTO> getSendMsgList(Long sendingId);
+    List<SendingMsgDTO> getSendMsgList(Long sendingId) throws JsonProcessingException;
 
     // 발송 메시지 조회
     SendingMsgDTO getSendMsg(Long sendingId, Long txId);

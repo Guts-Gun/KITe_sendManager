@@ -1,5 +1,6 @@
 package gutsandgun.kite_sendmanager.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.entity.write.Sending;
 import gutsandgun.kite_sendmanager.openfeign.SendingSchedulerServiceClient;
@@ -32,7 +33,7 @@ public class SendingServiceImpl implements SendingService{
     private final SendingCache sendingCache;
 
     @Override
-    public Long insertSending(SendingDTO sendingDTO, String userId) {
+    public Long insertSending(SendingDTO sendingDTO, String userId) throws JsonProcessingException {
 
         LocalDateTime reservDateTime = sendingDTO.getReservationTime();
 
@@ -42,7 +43,7 @@ public class SendingServiceImpl implements SendingService{
 
         Sending sending = writeSendingRepository.save(mapper.map(sendingDTO, Sending.class));
         Long sendingId = sending.getId();
-        sendingCache.insertSending(sendingId, sending);
+        sendingCache.insertSending(sendingId, mapper.map(sending, SendingDTO.class));
 
         if (reservDateTime != null) {
             SendingScheduleDto sendingScheduleDto = new SendingScheduleDto();
