@@ -4,6 +4,7 @@ import gutsandgun.kite_sendmanager.dto.SendingEmailDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
 import gutsandgun.kite_sendmanager.entity.read.SendingEmail;
 import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
+import gutsandgun.kite_sendmanager.entity.write.Sending;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingEmailRepository;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingMsgRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,11 @@ public class SendingCache {
     @Autowired
     private final ReadSendingEmailRepository readSendingEmailRepository;
 
+
+    @Cacheable(value="sending" , key = "#sendingId" ,cacheManager = "redisCacheManager")
+    public Sending insertSending(Long sendingId, Sending sending){
+        return sending;
+    }
 
     @Cacheable(value="sendingMsg" , key = "#sendingId" ,cacheManager = "redisCacheManager")
     public List<SendingMsg> getSendingMsg(Long sendingId){

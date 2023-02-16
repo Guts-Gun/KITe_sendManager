@@ -28,6 +28,8 @@ public class SendingServiceImpl implements SendingService{
     @Autowired
     private final ModelMapper mapper;
 
+    @Autowired
+    private final SendingCache sendingCache;
 
     @Override
     public Long insertSending(SendingDTO sendingDTO, String userId) {
@@ -40,6 +42,7 @@ public class SendingServiceImpl implements SendingService{
 
         Sending sending = writeSendingRepository.save(mapper.map(sendingDTO, Sending.class));
         Long sendingId = sending.getId();
+        sendingCache.insertSending(sendingId, sending);
 
         if (reservDateTime != null) {
             SendingScheduleDto sendingScheduleDto = new SendingScheduleDto();
