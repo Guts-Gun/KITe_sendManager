@@ -66,7 +66,7 @@ public class RabbitMQProducer {
     }
 
     public void sendEmailQueue1Message(SendingEmailDTO sendingEmailDTO, Long sendingId, SendingType sendingType){
-        System.out.println("Service: sendingManager, type: pushQueue" + ", sendingId: " +sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 4, TXId: " + sendingEmailDTO.getId() + ", time: " + new Date().getTime()+"@"););
+        System.out.println("Service: sendingManager, type: pushQueue" + ", sendingId: " +sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 4, TXId: " + sendingEmailDTO.getId() + ", time: " + new Date().getTime()+"@");
         rabbitTemplate.convertAndSend(emailExchange, emailRoutingKey1, sendingEmailDTO);
     }
 
