@@ -44,7 +44,7 @@ public class SendingServiceImpl implements SendingService{
         Sending sending = writeSendingRepository.save(mapper.map(sendingDTO, Sending.class));
         Long sendingId = sending.getId();
         sendingCache.insertSending(sendingId, mapper.map(sending, SendingDTO.class));
-
+        log.info("!!Sending Cache Check: {}",sendingCache.getSendingDto(sendingId));
         if (reservDateTime != null) {
             SendingScheduleDto sendingScheduleDto = new SendingScheduleDto();
             sendingScheduleDto.setSendingId(sendingId);

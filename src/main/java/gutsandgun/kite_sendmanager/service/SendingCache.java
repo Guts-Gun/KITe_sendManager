@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gutsandgun.kite_sendmanager.dto.SendingDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
+import gutsandgun.kite_sendmanager.entity.read.Sending;
 import gutsandgun.kite_sendmanager.entity.read.SendingEmail;
 import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingEmailRepository;
@@ -37,9 +38,17 @@ public class SendingCache {
 
     @Cacheable(value="sending" , key = "#sendingId" ,cacheManager = "CacheManager")
     public String insertSending(Long sendingId, SendingDTO sendingDTO) throws JsonProcessingException {
+        log.info("==================================================");
+        log.info("Cacheable" + sendingDTO );
+        log.info("==================================================");
         String sendingDtoStr = objectMapper.writeValueAsString(sendingDTO);
         return sendingDtoStr;
     }
+    @Cacheable(value="sending" , key = "#sendingId" ,cacheManager = "CacheManager")
+    public String getSendingDto(Long sendingId) {
+        return "NONMO";
+    }
+
 
     @Cacheable(value="sendingMsg" , key = "#sendingId" ,cacheManager = "CacheManager")
     public List<String> getSendingMsgDTOList(Long sendingId) throws JsonProcessingException {
