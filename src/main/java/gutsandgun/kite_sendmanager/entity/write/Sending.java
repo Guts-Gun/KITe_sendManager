@@ -4,6 +4,7 @@ import gutsandgun.kite_sendmanager.entity.BaseTimeEntity;
 import gutsandgun.kite_sendmanager.type.SendingRuleType;
 import gutsandgun.kite_sendmanager.type.SendingType;
 import jakarta.persistence.*;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -16,8 +17,10 @@ import org.hibernate.annotations.*;
 @Setter
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql= "UPDATE sending SET is_deleted=true WHERE id = ?")
-@Table(name="sending")
-@DynamicInsert
+@Table(name = "sending",
+        indexes = {
+                @Index(name = "idx_sending_user_id", columnList = "fk_user_id")
+        })@DynamicInsert
 public class Sending extends BaseTimeEntity {
 
     @Id
