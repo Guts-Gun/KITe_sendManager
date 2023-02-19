@@ -172,7 +172,7 @@ public class SendMsgServiceImpl implements SendMsgService {
         List<SendingMsgDTO> broker1SendingMsgDTOList = map.get(1L);
         if(broker1SendingMsgDTOList != null){
             broker1SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                rabbitMQProducer.sendQueue1Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                new Thread(()->rabbitMQProducer.sendQueue1Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType())).start();
             });
         }
 
@@ -180,7 +180,7 @@ public class SendMsgServiceImpl implements SendMsgService {
         List<SendingMsgDTO> broker2SendingMsgDTOList = map.get(2l);
         if(broker2SendingMsgDTOList != null) {
             broker2SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                rabbitMQProducer.sendQueue2Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                new Thread(()->rabbitMQProducer.sendQueue2Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType())).start();
             });
         }
 
@@ -188,7 +188,7 @@ public class SendMsgServiceImpl implements SendMsgService {
         List<SendingMsgDTO> broker3SendingMsgDTOList = map.get(3L);
         if (broker3SendingMsgDTOList != null){
             broker3SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                rabbitMQProducer.sendQueue3Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                new Thread(()->rabbitMQProducer.sendQueue3Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType())).start();
             });
         }
 
@@ -202,7 +202,7 @@ public class SendMsgServiceImpl implements SendMsgService {
                 sendingEmailDTO.setName(sendingMsgDTO.getName());
                 sendingEmailDTO.setSender(sendingMsgDTO.getSender());
                 sendingEmailDTO.setRegId(sendingMsgDTO.getRegId());
-                rabbitMQProducer.sendEmailQueue1Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                new Thread(()->rabbitMQProducer.sendEmailQueue1Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType())).start();
             });
         }
 
@@ -217,10 +217,9 @@ public class SendMsgServiceImpl implements SendMsgService {
                 sendingEmailDTO.setName(sendingMsgDTO.getName());
                 sendingEmailDTO.setSender(sendingMsgDTO.getSender());
                 sendingEmailDTO.setRegId(sendingMsgDTO.getRegId());
-                rabbitMQProducer.sendEmailQueue2Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType());
+                new Thread(()->rabbitMQProducer.sendEmailQueue2Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType())).start();
             });
         }
-
     }
 
 
