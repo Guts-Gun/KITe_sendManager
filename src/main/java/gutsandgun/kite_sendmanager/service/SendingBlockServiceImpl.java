@@ -3,6 +3,7 @@ package gutsandgun.kite_sendmanager.service;
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.entity.read.SendReplace;
 import gutsandgun.kite_sendmanager.entity.read.SendingBlock;
+import gutsandgun.kite_sendmanager.publisher.RabbitMQProducer;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingBlockRepository;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingReplaceRepository;
 import gutsandgun.kite_sendmanager.repository.write.WriteSendingBlockRepository;
@@ -38,6 +39,7 @@ public class SendingBlockServiceImpl implements SendingBlockService{
     @Autowired
     private final ModelMapper mapper;
 
+    private final RabbitMQProducer rabbitMQProducer;
 
     @Override
     public void insertSendingBlock(String userId, SendingBlockDTO sendingBlockDTO) {
@@ -73,7 +75,7 @@ public class SendingBlockServiceImpl implements SendingBlockService{
                 SendReplaceDTO sendReplaceDTO = getReplaceInfo(sendingMsgDTO.getId(), sendingDTO.getSendingType());
                 sendEmailService.sendMsgReplaceEmail(sendingDTO, sendReplaceDTO, sendingMsgDTO);
             }else{
-                System.out.println("Service: sendingManager, type: blocking, success: fail, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", TXId: "+sendingMsgDTO.getId()+", time: "+new Date().getTime()+"@");
+                rabbitMQProducer.logSendQueue("Service: sendingManager, type: blocking, success: fail, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", TXId: "+sendingMsgDTO.getId()+", time: "+new Date().getTime()+"@");
             }
         });
 

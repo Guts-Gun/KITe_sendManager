@@ -171,6 +171,28 @@ public class RabbitmqConfig {
         return connectionFactory;
     }
 
+    @Value("${rabbitmq.log.name}")
+    private String logQueue;
+    @Value("${rabbitmq.log.exchange}")
+    private String logExchange;
+
+    @Value("${rabbitmq.routing.key.log}")
+    private String logRoutingKey;
+
+    @Bean
+    Queue logQueue() {
+        return new Queue(logQueue, true);
+    }
+
+    @Bean
+    DirectExchange logDirectExchange() {
+        return new DirectExchange(logExchange);
+    }
+
+    @Bean
+    Binding logBinding() {
+        return BindingBuilder.bind(logQueue()).to(logDirectExchange()).with(logRoutingKey);
+    }
 
 
 }

@@ -83,6 +83,12 @@ rabbitmq:
     queue-detail: /api/queues/
     auth: Z3V0c2FuZGd1bjpndXRzYW5kZ3Vu  #gutsandgun.kro.kr
 #    auth: c29sYml0ZXN0OnNvbGJpdGVzdDEyMTIh  #172.16.226.148
+  log:
+    name: LogQueue
+    exchange: Log-exchange
+  routing:
+    key:
+      log: LogQueue
   sms:
     queue1:
       name: SKT

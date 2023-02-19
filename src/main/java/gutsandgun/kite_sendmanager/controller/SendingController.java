@@ -2,6 +2,7 @@ package gutsandgun.kite_sendmanager.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gutsandgun.kite_sendmanager.dto.*;
+import gutsandgun.kite_sendmanager.publisher.RabbitMQProducer;
 import gutsandgun.kite_sendmanager.service.*;
 import gutsandgun.kite_sendmanager.type.SendingRuleType;
 import gutsandgun.kite_sendmanager.type.SendingType;
@@ -29,6 +30,8 @@ public class SendingController {
     private final SendingRuleService sendingRuleService;
 
     private final SendingBlockService sendingBlockService;
+
+    private final RabbitMQProducer rabbitMQProducer;
 
 
     /**
@@ -69,7 +72,7 @@ public class SendingController {
 
         // 발송 정보
         SendingDTO sendingDTO = sendingService.getSending(map.get("sendingId"));
-        System.out.println("Service: sendingManager, type: sendingStart, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", time: "+new Date().getTime()+"@");
+        rabbitMQProducer.logSendQueue("Service: sendingManager, type: sendingStart, " + "sendingId: "+sendingDTO.getId()+", sendingType: "+sendingDTO.getSendingType()+", time: "+new Date().getTime()+"@");
 
         // 발송 메시지 리스트
         List<SendingMsgDTO> sendingMsgDTOList = null;
