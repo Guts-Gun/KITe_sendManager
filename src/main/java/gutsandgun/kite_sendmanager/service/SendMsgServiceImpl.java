@@ -46,7 +46,7 @@ public class SendMsgServiceImpl implements SendMsgService {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1000);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(100);
 
     @Override
     public List<SendingMsgDTO> getSendMsgList(Long sendingId) throws JsonProcessingException {
