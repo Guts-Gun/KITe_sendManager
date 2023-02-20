@@ -51,28 +51,33 @@ public class RabbitMQProducer {
     }
 
     public void sendQueue1Message(SendingMsgDTO sendingMsgDTO, Long sendingId, SendingType sendingType){
-        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " +sendingType + ", brokerId: 1, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime()+"@");
         rabbitTemplate.convertAndSend(exchange1, routingKey1, sendingMsgDTO);
+        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " +sendingType + ", brokerId: 1, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime()+"@");
+
     }
 
     public void sendQueue2Message(SendingMsgDTO sendingMsgDTO, Long sendingId, SendingType sendingType){
-        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 2, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime()+"@");
         rabbitTemplate.convertAndSend(exchange2, routingKey2, sendingMsgDTO);
+        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 2, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime()+"@");
+
     }
 
     public void sendQueue3Message(SendingMsgDTO sendingMsgDTO, Long sendingId, SendingType sendingType){
-        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 3, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime()+"@");
         rabbitTemplate.convertAndSend(exchange3, routingKey3, sendingMsgDTO);
+        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " + sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 3, TXId: " + sendingMsgDTO.getId() + ", time: " + new Date().getTime()+"@");
+
     }
 
     public void sendEmailQueue1Message(SendingEmailDTO sendingEmailDTO, Long sendingId, SendingType sendingType){
-        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " +sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 4, TXId: " + sendingEmailDTO.getId() + ", time: " + new Date().getTime()+"@");
         rabbitTemplate.convertAndSend(emailExchange, emailRoutingKey1, sendingEmailDTO);
+        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " +sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 4, TXId: " + sendingEmailDTO.getId() + ", time: " + new Date().getTime()+"@");
+
     }
 
     public void sendEmailQueue2Message(SendingEmailDTO sendingEmailDTO, Long sendingId, SendingType sendingType){
-        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " +sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 5, TXId: " + sendingEmailDTO.getId() + ", time: " + new Date().getTime()+"@");
         rabbitTemplate.convertAndSend(exchange3, emailRoutingKey2, sendingEmailDTO);
+        logSendQueue("Service: sendingManager, type: pushQueue" + ", sendingId: " +sendingId + ", sendingType: " + sendingType.toString() + ", brokerId: 5, TXId: " + sendingEmailDTO.getId() + ", time: " + new Date().getTime()+"@");
+
     }
 
     @Value("${rabbitmq.log.exchange}")
