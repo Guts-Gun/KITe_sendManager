@@ -166,66 +166,83 @@ public class SendMsgServiceImpl implements SendMsgService {
     }
 
 
-    public void produceQueue(SendingDTO sendingDTO, Map<Long, List<SendingMsgDTO>> map){
+    public void produceQueue(SendingDTO sendingDTO, Map<Long, List<SendingMsgDTO>> map) {
 
         log.info("produceQueue==========================================================");
         log.info(map);
         log.info("produceQueue==========================================================");
 
-        // SKT
-        List<SendingMsgDTO> broker1SendingMsgDTOList = map.get(1L);
-        if(broker1SendingMsgDTOList != null){
-            broker1SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                executorService.submit(() ->rabbitMQProducer.sendQueue1Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
-            });
-        }
 
-        // KT
-        List<SendingMsgDTO> broker2SendingMsgDTOList = map.get(2l);
-        if(broker2SendingMsgDTOList != null) {
-            broker2SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                executorService.submit(() ->rabbitMQProducer.sendQueue2Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
-            });
-        }
+        Thread thread = new Thread(() -> {
+            // SKT
+            List<SendingMsgDTO> broker1SendingMsgDTOList = map.get(1L);
+            if (broker1SendingMsgDTOList != null) {
+                broker1SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                    executorService.submit(() -> rabbitMQProducer.sendQueue1Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
+                });
+            }
+        });
 
-        // LG
-        List<SendingMsgDTO> broker3SendingMsgDTOList = map.get(3L);
-        if (broker3SendingMsgDTOList != null){
-            broker3SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                executorService.submit(() ->rabbitMQProducer.sendQueue3Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
-            });
-        }
+        Thread thread2 = new Thread(() -> {
+            // KT
+            List<SendingMsgDTO> broker2SendingMsgDTOList = map.get(2l);
+            if (broker2SendingMsgDTOList != null) {
+                broker2SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                    executorService.submit(() -> rabbitMQProducer.sendQueue2Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
+                });
+            }
+        });
 
-        List<SendingMsgDTO> broker4SendingMsgDTOList = map.get(4L);
-        if(broker4SendingMsgDTOList != null){
-            broker4SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                SendingEmailDTO sendingEmailDTO = new SendingEmailDTO();
-                sendingEmailDTO.setSendingId(sendingMsgDTO.getSendingId());
-                sendingEmailDTO.setReceiver(sendingMsgDTO.getReceiver());
-                sendingEmailDTO.setId(sendingMsgDTO.getId());
-                sendingEmailDTO.setName(sendingMsgDTO.getName());
-                sendingEmailDTO.setSender(sendingMsgDTO.getSender());
-                sendingEmailDTO.setRegId(sendingMsgDTO.getRegId());
-                executorService.submit(() ->rabbitMQProducer.sendEmailQueue1Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
-            });
-        }
+        Thread thread3 = new Thread(() -> {
+            // LG
+            List<SendingMsgDTO> broker3SendingMsgDTOList = map.get(3L);
+            if (broker3SendingMsgDTOList != null) {
+                broker3SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                    executorService.submit(() -> rabbitMQProducer.sendQueue3Message(sendingMsgDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
+                });
+            }
+        });
+
+        thread.start();
+        thread2.start();
+        thread3.start();
+
+        Thread thread4 = new Thread(() -> {
+            List<SendingMsgDTO> broker4SendingMsgDTOList = map.get(4L);
+            if (broker4SendingMsgDTOList != null) {
+                broker4SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                    SendingEmailDTO sendingEmailDTO = new SendingEmailDTO();
+                    sendingEmailDTO.setSendingId(sendingMsgDTO.getSendingId());
+                    sendingEmailDTO.setReceiver(sendingMsgDTO.getReceiver());
+                    sendingEmailDTO.setId(sendingMsgDTO.getId());
+                    sendingEmailDTO.setName(sendingMsgDTO.getName());
+                    sendingEmailDTO.setSender(sendingMsgDTO.getSender());
+                    sendingEmailDTO.setRegId(sendingMsgDTO.getRegId());
+                    executorService.submit(() -> rabbitMQProducer.sendEmailQueue1Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
+                });
+            }
+        });
+
+        Thread thread5 = new Thread(() -> {
+            List<SendingMsgDTO> broker5SendingMsgDTOList = map.get(5L);
+            if (broker5SendingMsgDTOList != null) {
+                broker5SendingMsgDTOList.forEach(sendingMsgDTO -> {
+                    SendingEmailDTO sendingEmailDTO = new SendingEmailDTO();
+                    sendingEmailDTO.setSendingId(sendingMsgDTO.getSendingId());
+                    sendingEmailDTO.setReceiver(sendingMsgDTO.getReceiver());
+                    sendingEmailDTO.setId(sendingMsgDTO.getId());
+                    sendingEmailDTO.setName(sendingMsgDTO.getName());
+                    sendingEmailDTO.setSender(sendingMsgDTO.getSender());
+                    sendingEmailDTO.setRegId(sendingMsgDTO.getRegId());
+                    executorService.submit(() -> rabbitMQProducer.sendEmailQueue2Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
+                });
+            }
+        });
 
 
-        List<SendingMsgDTO> broker5SendingMsgDTOList = map.get(5L);
-        if(broker5SendingMsgDTOList != null){
-            broker5SendingMsgDTOList.forEach(sendingMsgDTO -> {
-                SendingEmailDTO sendingEmailDTO = new SendingEmailDTO();
-                sendingEmailDTO.setSendingId(sendingMsgDTO.getSendingId());
-                sendingEmailDTO.setReceiver(sendingMsgDTO.getReceiver());
-                sendingEmailDTO.setId(sendingMsgDTO.getId());
-                sendingEmailDTO.setName(sendingMsgDTO.getName());
-                sendingEmailDTO.setSender(sendingMsgDTO.getSender());
-                sendingEmailDTO.setRegId(sendingMsgDTO.getRegId());
-                executorService.submit(() ->rabbitMQProducer.sendEmailQueue2Message(sendingEmailDTO, sendingDTO.getId(), sendingDTO.getSendingType()));
-            });
-        }
+        thread4.start();
+        thread5.start();
     }
-
 
     public List<BrokerDTO> getMsgBrokerList(){
         List<Broker> BrokerList = readBrokerRepository.findBySendingType(SendingType.SMS);
