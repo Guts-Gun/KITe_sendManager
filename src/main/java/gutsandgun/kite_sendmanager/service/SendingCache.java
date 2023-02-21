@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gutsandgun.kite_sendmanager.dto.SendingDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
+import gutsandgun.kite_sendmanager.entity.read.SendReplace;
 import gutsandgun.kite_sendmanager.entity.read.Sending;
 import gutsandgun.kite_sendmanager.entity.read.SendingEmail;
 import gutsandgun.kite_sendmanager.entity.read.SendingMsg;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingEmailRepository;
 import gutsandgun.kite_sendmanager.repository.read.ReadSendingMsgRepository;
+import gutsandgun.kite_sendmanager.repository.read.ReadSendingReplaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -29,6 +31,9 @@ public class SendingCache {
 
     @Autowired
     private final ReadSendingEmailRepository readSendingEmailRepository;
+
+    @Autowired
+    private final ReadSendingReplaceRepository readSendingReplaceRepository;
 
     @Autowired
     private final ModelMapper mapper;
@@ -77,6 +82,11 @@ public class SendingCache {
         });
         return list;
 
+    }
+
+    @Cacheable(value = "sendReplaceId", key = "#Id", cacheManager = "CacheManager")
+    public SendReplace getSendReplaceInfo(Long Id){
+        return readSendingReplaceRepository.findById(Id).get();
     }
 
 }

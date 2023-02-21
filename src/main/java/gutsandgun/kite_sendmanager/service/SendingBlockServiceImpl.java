@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class SendingBlockServiceImpl implements SendingBlockService{
     private final ModelMapper mapper;
 
     private final RabbitMQProducer rabbitMQProducer;
+
+    private final SendingCache sendingCache;
 
     @Override
     public void insertSendingBlock(String userId, SendingBlockDTO sendingBlockDTO) {
@@ -89,11 +92,10 @@ public class SendingBlockServiceImpl implements SendingBlockService{
 
     @Override
     public SendReplaceDTO getReplaceInfo(Long txId, SendingType sendingType) {
-        SendReplace sendReplace = readSendingReplaceRepository.findById(txId).get();
+        SendReplace sendReplace = sendingCache.getSendReplaceInfo(txId);
         SendReplaceDTO sendReplaceDTO = mapper.map(sendReplace, SendReplaceDTO.class);
         return  sendReplaceDTO;
     }
-
 
 
 
