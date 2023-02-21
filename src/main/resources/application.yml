@@ -120,4 +120,4 @@ rabbitmq:
 
 feign:
   url :
-    sending-scheduler : gutsandgun.kro.kr:30000
+    sending-scheduler : https://gutsandgun.kro.kr:30000
