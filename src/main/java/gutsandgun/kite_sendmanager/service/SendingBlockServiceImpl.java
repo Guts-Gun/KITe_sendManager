@@ -1,5 +1,7 @@
 package gutsandgun.kite_sendmanager.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gutsandgun.kite_sendmanager.dto.*;
 import gutsandgun.kite_sendmanager.entity.read.SendReplace;
 import gutsandgun.kite_sendmanager.entity.read.SendingBlock;
@@ -43,6 +45,8 @@ public class SendingBlockServiceImpl implements SendingBlockService{
     private final RabbitMQProducer rabbitMQProducer;
 
     private final SendingCache sendingCache;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void insertSendingBlock(String userId, SendingBlockDTO sendingBlockDTO) {
@@ -92,8 +96,13 @@ public class SendingBlockServiceImpl implements SendingBlockService{
 
     @Override
     public SendReplaceDTO getReplaceInfo(Long txId, SendingType sendingType) {
-        SendReplaceDTO sendReplaceDTO = sendingCache.getSendReplaceInfo(txId);
-        return  sendReplaceDTO;
+        SendReplaceDTO sendReplaceDTO = null;
+        try {
+            sendReplaceDTO = objectMapper.readValue(sendingCache.getSendReplaceInfo(txId), SendReplaceDTO.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return sendReplaceDTO;
     }
 
 

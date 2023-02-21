@@ -86,9 +86,13 @@ public class SendingCache {
     }
 
     @Cacheable(value = "sendReplaceId", key = "#Id", cacheManager = "CacheManager")
-    public SendReplaceDTO getSendReplaceInfo(Long Id){
+    public String getSendReplaceInfo(Long Id){
         SendReplace sendReplace=readSendingReplaceRepository.findById(Id).get();
-        return mapper.map(sendReplace, SendReplaceDTO.class);
+        try {
+            return objectMapper.writeValueAsString(mapper.map(sendReplace, SendReplaceDTO.class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
