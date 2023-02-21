@@ -92,8 +92,7 @@ public class SendingBlockServiceImpl implements SendingBlockService{
 
     @Override
     public SendReplaceDTO getReplaceInfo(Long txId, SendingType sendingType) {
-        SendReplace sendReplace = sendingCache.getSendReplaceInfo(txId);
-        SendReplaceDTO sendReplaceDTO = mapper.map(sendReplace, SendReplaceDTO.class);
+        SendReplaceDTO sendReplaceDTO = sendingCache.getSendReplaceInfo(txId);
         return  sendReplaceDTO;
     }
 

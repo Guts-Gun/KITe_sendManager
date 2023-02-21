@@ -2,6 +2,7 @@ package gutsandgun.kite_sendmanager.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gutsandgun.kite_sendmanager.dto.SendReplaceDTO;
 import gutsandgun.kite_sendmanager.dto.SendingDTO;
 import gutsandgun.kite_sendmanager.dto.SendingMsgDTO;
 import gutsandgun.kite_sendmanager.entity.read.SendReplace;
@@ -85,8 +86,9 @@ public class SendingCache {
     }
 
     @Cacheable(value = "sendReplaceId", key = "#Id", cacheManager = "CacheManager")
-    public SendReplace getSendReplaceInfo(Long Id){
-        return readSendingReplaceRepository.findById(Id).get();
+    public SendReplaceDTO getSendReplaceInfo(Long Id){
+        SendReplace sendReplace=readSendingReplaceRepository.findById(Id).get();
+        return mapper.map(sendReplace, SendReplaceDTO.class);
     }
 
 }
