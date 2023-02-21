@@ -38,7 +38,7 @@ public class SendingServiceImpl implements SendingService{
         LocalDateTime reservDateTime = sendingDTO.getReservationTime();
 
         if (reservDateTime != null){
-            sendingDTO.setScheduleTime(reservDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+            sendingDTO.setScheduleTime(reservDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli());
         }
 
         Sending sending = writeSendingRepository.save(mapper.map(sendingDTO, Sending.class));
