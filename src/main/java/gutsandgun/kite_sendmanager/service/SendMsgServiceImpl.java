@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -64,8 +65,25 @@ public class SendMsgServiceImpl implements SendMsgService {
     }
 
     @Override
-    public SendingMsgDTO getSendMsg(Long sendingId, Long txId) {
-        return mapper.map(readSendingMsgRepository.findBySendingIdAndId(sendingId, txId), SendingMsgDTO.class);
+    public SendingMsgDTO getSendMsg(Long sendingId, Long txId) throws JsonProcessingException {
+
+        //        return mapper.map(readSendingMsgRepository.findBySendingIdAndId(sendingId, txId), SendingMsgDTO.class);
+        List<String> list = sendingCache.getSendingMsgDTOList(sendingId) ;
+        List<SendingMsgDTO> sendingMsgList =  new ArrayList<>();
+        list.forEach(str -> {
+            try {
+                SendingMsgDTO sendingMsgDTO = objectMapper.readValue(str, SendingMsgDTO.class);
+                sendingMsgList.add(sendingMsgDTO);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        List<SendingMsgDTO> sendingMsgDTOList = sendingMsgList.stream().filter(_this ->
+                _this.getId() == txId
+        ).collect(Collectors.toList());
+
+        return sendingMsgDTOList.get(0);
     }
 
     @Override

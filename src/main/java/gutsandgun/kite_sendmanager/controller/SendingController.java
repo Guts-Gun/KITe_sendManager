@@ -112,7 +112,7 @@ public class SendingController {
      * @return String success
      */
     @PostMapping("/replaceSend/Msg")
-    public ResponseEntity<String> replaceSendMsg(@RequestBody Map<String, Long> map) {
+    public ResponseEntity<String> replaceSendMsg(@RequestBody Map<String, Long> map) throws JsonProcessingException {
         Long sendingId = map.get("sendingId");
         Long txId = map.get("txId");
 

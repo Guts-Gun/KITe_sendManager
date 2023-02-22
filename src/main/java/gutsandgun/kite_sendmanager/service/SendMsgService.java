@@ -13,7 +13,7 @@ public interface SendMsgService {
     List<SendingMsgDTO> getSendMsgList(Long sendingId) throws JsonProcessingException;
 
     // 발송 메시지 조회
-    SendingMsgDTO getSendMsg(Long sendingId, Long txId);
+    SendingMsgDTO getSendMsg(Long sendingId, Long txId) throws JsonProcessingException;
 
     // 중계사 분배 비율에 따른 메시지 분배
     void distributeMessageCustom(SendingDTO sendingDTO, List<SendingRuleDTO> sendingRuleDTOList, List<SendingMsgDTO> sendingMsgDTOList);
