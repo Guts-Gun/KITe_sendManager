@@ -78,7 +78,8 @@ public class SendMsgServiceImpl implements SendMsgService {
                 throw new RuntimeException(e);
             }
         });
-
+        log.info("get cachable value result");
+        log.info(sendingMsgList);
         List<SendingMsgDTO> sendingMsgDTOList = sendingMsgList.stream().filter(_this ->
                 _this.getId().equals(txId)
         ).collect(Collectors.toList());
