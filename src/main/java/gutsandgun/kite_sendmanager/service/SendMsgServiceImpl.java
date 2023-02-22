@@ -80,7 +80,7 @@ public class SendMsgServiceImpl implements SendMsgService {
         });
 
         List<SendingMsgDTO> sendingMsgDTOList = sendingMsgList.stream().filter(_this ->
-                _this.getId() == txId
+                _this.getId().equals(txId)
         ).collect(Collectors.toList());
 
         return sendingMsgDTOList.get(0);
