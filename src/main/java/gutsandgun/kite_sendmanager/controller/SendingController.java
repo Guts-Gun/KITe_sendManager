@@ -116,12 +116,17 @@ public class SendingController {
         Long sendingId = map.get("sendingId");
         Long txId = map.get("txId");
 
+
+        log.info("*********************************");
+        log.info("플랫폼 대체 발송");
         SendingDTO sendingDTO = sendingService.getSending(sendingId);
+        log.info("get sending");
         SendReplaceDTO sendReplaceDTO = sendingBlockService.getReplaceInfo(txId, sendingDTO.getSendingType());
+        log.info("get sendReplace");
         SendingMsgDTO sendingMsgDTO = sendMsgService.getSendMsg(sendingId, txId);
-
+        log.info("get sendingMsg");
         sendEmailService.sendMsgReplaceEmail(sendingDTO, sendReplaceDTO, sendingMsgDTO);
-
+        log.info("*********************************");
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
