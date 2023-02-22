@@ -138,7 +138,7 @@ public class SendMsgServiceImpl implements SendMsgService {
             int sendCnt = (int) Math.round(percent * totalMsgCount);
 
             // 분배 리스트 종료 인덱스
-            int end = sendCnt + startCnt.get();
+            int end = sendCnt + startCnt.get() > totalMsgCount? totalMsgCount : sendCnt + startCnt.get();
             Long BrokerId = Long.valueOf(brokerRule.get("brokerId"));
             returnMap.put(BrokerId, new ArrayList<>( sendingMsgDTOList.subList(startCnt.get(), end)));
 
